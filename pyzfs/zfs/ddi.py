@@ -74,6 +74,44 @@ def compute_ddig(cell, ft):
     return ddig
 
 
+
+def compute_ddig_gpaw(G):
+    """Compute dipole-dipole interaction in G space, GPAW edition.
+
+    See compute_ddig (above) for theoretical description.
+
+    Args:
+        G (np.ndarray): Reciprocal vectors from GPAW
+
+    Returns:
+        np.ndarray of shape (3, 3, N). First two indices iterate
+            over cartesian coordinates, and the last index iterates over G space.
+    """
+    G = np.asarray(G, dtype=float) # (N, 3)
+
+    # Gsquare = ||G||^2 for each vector, but avoid divide-by-zero
+    Gsquare = np.einsum("ni,ni->n", G, G)  # (N,)
+    Gsquare = np.where(Gsquare == 0.0, 1.0, Gsquare)  # Will be removed later
+
+    # Outer product for each vector: (N,3,3) where each is G_i G_i^T
+    ddig = np.einsum("ni,nj->nij", G, G)  # (N,3,3)
+
+    # Normalize by Gsquare
+    ddig /= Gsquare[:, None, None]
+
+    # Subtract I/3 (broadcast over N)
+    ddig -= np.eye(3) / 3.0
+
+    # Change size to (3, 3, N)
+    ddig = np.transpose(ddig, (1, 2, 0))
+
+    # Multiply by 4pi factor
+    ddig *= 4 * np.pi
+
+    return ddig
+
+
+
 def compute_ddir(cell, ft):
     """Compute dipole-dipole interaction in R space.
 

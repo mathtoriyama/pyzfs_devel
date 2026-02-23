@@ -102,3 +102,37 @@ def compute_delta_model_rhog(cell, ft, d1, d2, d3, s=1):
 
     # rhog, rhor, rhoj, rhok = compute_rhog(psi1r, psi2r, ft)
     # return rhog, rhor, rhoj, rhok, psi1r, psi2r
+
+
+
+# --- GPAW functionalities --- #
+
+def pd_fft_norm(f_R, pw_desc):
+    """GPAW FFT routine, with normalization"""
+    return pw_desc.fft(f_R) / f_R.flatten().shape[0]
+
+
+def compute_rhog_gpaw(psi1r, psi2r, pw_desc):
+    """Compute rho(G, -G) for two electrons occupying two (KS) orbitals, GPAW edition.
+
+    See compute_rhog (above) for theoretical description.
+
+    Args:
+        psi1r, psi2r (np.ndarray): R space wavefunction for electron 1 and 2.
+        pw_desc (gpaw.pw.descriptor.PWDescriptor): Object which computes FFT
+
+    Returns:
+        rho(G, -G) as a np.ndarray of shape (N, ).
+    """
+    
+    try:
+        import cupy as np
+    except ImportError:
+        import numpy as np
+
+    f1g = pd_fft_norm(psi1r * np.conj(psi1r), pw_desc)
+    f2g = pd_fft_norm(psi2r * np.conj(psi2r), pw_desc)
+    f3g = pd_fft_norm(psi1r * np.conj(psi2r), pw_desc)
+    rhog = f1g * np.conj(f2g) - f3g * np.conj(f3g)
+    return rhog
+

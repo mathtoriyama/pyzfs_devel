@@ -1,19 +1,20 @@
 from time import time
 import numpy as np
 from importlib.metadata import version
-import os
+import os, sys
 import psutil
 from mpi4py import MPI
 from lxml import etree
+import math
 
 from ..common.parallel import ProcessorGrid, SymmetricDistributedMatrix
 from ..common.cell import Cell
 from ..common.ft import FourierTransform
 from ..common.io import indent
 from ..common.counter import Counter
-from .ddi import compute_ddig
+from .ddi import compute_ddig, compute_ddig_gpaw
 from .prefactor import prefactor
-from .rhog import compute_rhog
+from .rhog import compute_rhog, compute_rhog_gpaw
 
 
 class ZFSCalculation:
@@ -56,6 +57,25 @@ class ZFSCalculation:
                     will be computed every time when needed
                 "critical": lowest memory usage, some intermediate quantities will not be stored
                     and will be computed every time when needed
+        """
+
+        """
+        # Define new membership for MPI, to have square grid
+        size = comm.Get_size()
+        rank = comm.Get_rank()
+        N_active = math.isqrt(size)   # number of ranks to use
+        color = 0 if rank < N_active else MPI.UNDEFINED
+
+        # Create new communicator
+        comm_sq = comm.Split(color, rank)
+
+        # Remove ranks not part of square grid
+        if comm_sq == MPI.COMM_NULL:
+            MPI.Finalize()
+            sys.exit(0)
+        
+        # Define a 2D processor grid to parallelize summation over pairs of orbitals.
+        self.pgrid = ProcessorGrid(comm_sq, square=True)
         """
 
         # Define a 2D processor grid to parallelize summation over pairs of orbitals.
@@ -120,11 +140,17 @@ class ZFSCalculation:
         # upper triangular part of ddig
         if self.pgrid.onroot:
             print("\nComputing dipole-dipole interaction tensor in G space...\n")
-        ddig = compute_ddig(self.cell, self.ft)
-        if lGPU:
-            self.ddig = cp.asarray(ddig[np.triu_indices(3)])
+
+        if self.wfc.calc_gpaw is not None:
+            mask = np.sum(self.wfc.gvecs**2, axis=1) > 0  # mask to remove G = 0
+            ddig = compute_ddig_gpaw(self.wfc.gvecs)
+            self.ddig = ddig[:, :, mask]
         else:
-            self.ddig = ddig[np.triu_indices(3)]
+            ddig = compute_ddig(self.cell, self.ft)
+            if lGPU:
+                self.ddig = cp.asarray(ddig[np.triu_indices(3)])
+            else:
+                self.ddig = ddig[np.triu_indices(3)]
         self.print_memory_usage()
 
         # Compute contribution to D tensor from every pair of electrons
@@ -142,6 +168,7 @@ class ZFSCalculation:
         for iloc, jloc in self.I.get_triu_iterator():
             # Load two wavefunctions
             i, j = self.I.ltog(iloc, jloc)
+
             if i == j:
                 c.count()
                 continue  # skip diagonal terms
@@ -149,6 +176,23 @@ class ZFSCalculation:
                 chi = 1
             else:
                 chi = -1
+
+            # --- GPAW --- #
+            if self.wfc.calc_gpaw is not None:
+                
+                psi1r = wfc.get_psir_gpaw(wfc.iorb_sb_map[i])
+                psi2r = wfc.get_psir_gpaw(wfc.iorb_sb_map[j])
+                rhog = compute_rhog_gpaw(psi1r, psi2r, wfc.calc_gpaw.wfs.pd)
+                rhog = rhog[mask]  # Remove G = 0
+
+                fac = 2 * chi * prefactor * self.cell.omega
+                D_pair = np.sum( fac * self.ddig * rhog[None, None, :], axis=2 )
+                
+                self.I[iloc, jloc, ...] = np.real( D_pair[np.triu_indices(3)] )
+                c.count()
+
+                continue
+
 
             psi1r = wfc.get_psir(i)
             psi2r = wfc.get_psir(j)
