@@ -3,24 +3,21 @@ import numpy as np
 import os, sys
 from mpi4py import MPI
 
+from .baseloader import WavefunctionLoader
+from ..cell import Cell
+from ..ft import FourierTransform
+from .wavefunction import Wavefunction
+from ...common.misc import empty_ase_cell
+
 from gpaw import GPAW
 from gpaw.old.pw.descriptor import PWDescriptor
 from gpaw.mpi import serial_comm
 
-from .baseloader import WavefunctionLoader
-from ..cell import Cell
-from ..ft import FourierTransform  #, fftshift, ifftshift, irfftn, ifftn
-from .wavefunction import Wavefunction
-# from ..counter import Counter
-from ..parallel import SymmetricDistributedMatrix
-
-from ...common.misc import empty_ase_cell
-
 class GPAWWavefunctionLoader(WavefunctionLoader):
 
-    def __init__(self, gpwfile, comm=MPI.COMM_WORLD):
+    def __init__(self, gpwfile, ae=False, comm=MPI.COMM_WORLD):
         self.gpwfile = gpwfile
-        self.calc = None
+        self.ae = ae
         super(GPAWWavefunctionLoader, self).__init__()
 
     def scan(self):
@@ -81,7 +78,11 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
             gamma=self.gamma,
             gvecs=self.gvecs,
         )
-        self.wfc.add_gpaw_calc(self.calc)
+
+        #self.wfc.add_gpaw_calc(calc_gpaw=self.calc)
+        self.wfc.add_gpaw_calc( calc_gpaw = self.calc, 
+                                ae = self.ae,
+                                )
 
 
     def load(self, iorbs, sdm):
