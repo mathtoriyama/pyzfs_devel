@@ -2,7 +2,6 @@ import numpy as np
 from ..ft import fftshift, ifftshift, irfftn
 from mpi4py import MPI
 from ..units import bohr_to_angstrom
-from scipy.interpolate import interpn
 
 
 class Wavefunction:
@@ -63,9 +62,8 @@ class Wavefunction:
             yzplane[self.ft.n2 // 2 + 1 :, :] = 1
             yzplane[0, self.ft.n3 // 2 + 1 :] = 1
             self.yzlowerplane = list(zip(*np.nonzero(yzplane)))
-        
-        self.calc_gpaw = None
 
+        self.gpaw = False
 
     def compute_psir_from_psig_arr(self, psig_arr):
         """Compute psi(r) based on psi(G) defined on self.gvecs"""
@@ -166,63 +164,3 @@ class Wavefunction:
     def compute_all_rhog(self):
         for iorb in self.iorb_psir_map:
             self.iorb_rhog_map[iorb] = self.get_rhog(iorb)
-
-
-
-    # -------- GPAW functionality -------- #
-
-    def add_gpaw_calc(self, calc_gpaw, ae=False):
-        
-        # GPAW raw output
-        from gpaw.old.calculator import GPAW
-        assert type(calc_gpaw) == GPAW
-        self.calc_gpaw = calc_gpaw
-        
-        # Setting for all-electron calc
-        self.ae = ae
-        if self.ae:
-
-            # PS to AE reconstruction object
-            from gpaw.utilities.ps2ae import PS2AE
-            self.calc_gpaw_ps2ae = PS2AE(self.calc_gpaw)
-
-            # AE grid
-            gd_ae = self.calc_gpaw_ps2ae.gd
-            self.coords_ae = (gd_ae.coords(0), gd_ae.coords(1), gd_ae.coords(2))
-            
-            # PS grid
-            gd_ps = self.calc_gpaw.wfs.gd
-            coords_ps = gd_ps.get_grid_point_coordinates()
-            self.coords_ps_t = (coords_ps[0], coords_ps[1], coords_ps[2])
-
-
-    def get_psir_gpaw(self, iorb_set):
-        """Get psi(r) of certain index, GPAW edition"""
-
-        iorb = iorb_set[1]
-        spin = iorb_set[0]
-        if spin == "up":
-            ispin = 0
-        elif spin == "down":
-            ispin = 1
-
-        if not self.ae:
-            gpaw_wf = self.calc_gpaw.get_pseudo_wave_function(band=iorb, spin=ispin)  # Units 1/Angstrom^(3/2), https://gpaw.readthedocs.io/devel/paw.html#gpaw.calculator.GPAW.get_pseudo_wave_function
-            """
-            wfs = self.calc_gpaw.wfs
-            local_gs = wfs.gd.n_c
-            gpaw_wf = wfs.pd.ifft(wfs.kpt_u[ispin].psit_nG[iorb])  # Domain-decomposed local wave function for MPI process
-            assert np.all(gpaw_wf.shape == local_gs), "Shapes are wrong... Exiting."
-            """
-        else:
-            # Get all-electron wave function
-            gpaw_wf_ae = self.calc_gpaw_ps2ae.get_wave_function(n=iorb, s=ispin, ae=True)
-
-            # Coarsen all-electron WF to same grid as pseudo WF
-            gpaw_wf = interpn(self.coords_ae, gpaw_wf_ae, self.coords_ps_t)
-
-        gpaw_wf *= bohr_to_angstrom**(3./2)  # Convert units from 1/Angstrom^(3/2) to 1/bohr^(3/2)
-
-        return gpaw_wf
-
-

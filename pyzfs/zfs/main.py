@@ -178,10 +178,14 @@ class ZFSCalculation:
                 chi = -1
 
             # --- GPAW --- #
-            if self.wfc.calc_gpaw is not None:
+            if wfc.gpaw:
                 
+                """
                 psi1r = wfc.get_psir_gpaw(wfc.iorb_sb_map[i])
                 psi2r = wfc.get_psir_gpaw(wfc.iorb_sb_map[j])
+                """
+                psi1r = wfc.get_psir_gpaw(i)
+                psi2r = wfc.get_psir_gpaw(j)
                 rhog = compute_rhog_gpaw(psi1r, psi2r, wfc.calc_gpaw.wfs.pd)
                 rhog = rhog[mask]  # Remove G = 0
 
