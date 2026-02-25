@@ -17,6 +17,21 @@ from ..units import bohr_to_angstrom
 from gpaw import GPAW
 from gpaw.old.pw.descriptor import PWDescriptor
 from gpaw.mpi import serial_comm
+from gpaw.utilities.ps2ae import PS2AE
+
+def _compute_offset(sdm, iorb):
+    """compute the index for iorb^th wfc, note that some rows in psig_arrs_all
+    are zero to facilitate MPI scatter"""
+    nproc = iloc = 0
+    for iproc in range(sdm.pgrid.nrow):
+        mstart, mloc, mend, nstart, nloc, nend = sdm.indexmap[iproc, 0]
+        if mstart > iorb:
+            break
+        nproc = iproc
+        iloc = iorb - mstart
+    return nproc * sdm.mlocx + iloc
+
+
 
 class GPAWWavefunctionLoader(WavefunctionLoader):
 
@@ -42,7 +57,10 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         ))
 
         # Create FT objects
-        grid = self.calc_gpaw_ps2ae.gd.N_c
+        if self.ae:
+            grid = self.calc_gpaw_ps2ae.gd.N_c
+        else:
+            grid = self.calc_gpaw.wfs.gd.N_c
         self.wft = FourierTransform(grid[0], grid[1], grid[2])
         self.dft = FourierTransform(grid[0], grid[1], grid[2])
                 
@@ -140,7 +158,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
                 message="(process 0) {n} orbitals ({percent}%) loaded in {dt}...",
             )
 
-            nbands = calc.get_number_of_bands()
+            nbands = self.calc_gpaw.get_number_of_bands()
             for ispin in range(2):
                 for iband in range(nbands):
                     psir = self.calc_gpaw.get_pseudo_wave_function(band=iband, spin=ispin)  # Units 1/Angstrom^(3/2), https://gpaw.readthedocs.io/devel/paw.html#gpaw.calculator.GPAW.get_pseudo_wave_function
@@ -152,27 +170,6 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
                         offset = _compute_offset(sdm, iorb)
                         psig_arrs_all[offset] = psig
                         c.count()
-
-            """
-            for ispin in range(2):
-                wfcfile = "wfcup1.hdf5" if ispin == 0 else "wfcdw1.hdf5"
-                wfch5 = h5py.File(
-                    os.path.join(self.root, "{}.save".format(self.prefix), wfcfile), "r"
-                )
-                gvecs = np.array(wfch5["MillerIndices"], dtype=int)
-                ngvecs = gvecs.shape[0]
-                assert gvecs.shape == (ngvecs, 3)
-                evc = np.array(wfch5["evc"])
-                for ievc in range(evc.shape[0]):
-                    band = ievc + 1
-                    iorb = self.wfc.sb_iorb_map.get(
-                        ("up" if ispin == 0 else "down", band)
-                    )
-                    if iorb is not None:
-                        offset = _compute_offset(sdm, iorb)
-                        psig_arrs_all[offset] = evc[ievc].view(complex)
-                        c.count()
-            """
 
         # scatter wavefunctions
         # allocate wfc arrays
@@ -231,7 +228,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         elif self.memory == "critical":
             pass
         else:
-
+            raise ValueError
 
 
     def set_psir_gpaw_Old(self, iorb):
