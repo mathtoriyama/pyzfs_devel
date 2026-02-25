@@ -59,25 +59,6 @@ class ZFSCalculation:
                     and will be computed every time when needed
         """
 
-        """
-        # Define new membership for MPI, to have square grid
-        size = comm.Get_size()
-        rank = comm.Get_rank()
-        N_active = math.isqrt(size)   # number of ranks to use
-        color = 0 if rank < N_active else MPI.UNDEFINED
-
-        # Create new communicator
-        comm_sq = comm.Split(color, rank)
-
-        # Remove ranks not part of square grid
-        if comm_sq == MPI.COMM_NULL:
-            MPI.Finalize()
-            sys.exit(0)
-        
-        # Define a 2D processor grid to parallelize summation over pairs of orbitals.
-        self.pgrid = ProcessorGrid(comm_sq, square=True)
-        """
-
         # Define a 2D processor grid to parallelize summation over pairs of orbitals.
         self.pgrid = ProcessorGrid(comm, square=True)
         if self.pgrid.onroot:
@@ -141,7 +122,7 @@ class ZFSCalculation:
         if self.pgrid.onroot:
             print("\nComputing dipole-dipole interaction tensor in G space...\n")
 
-        """
+        
         if self.wfc.gpaw:
             mask = np.sum(self.wfc.gvecs**2, axis=1) > 0  # mask to remove G = 0
             ddig = compute_ddig_gpaw(self.wfc.gvecs)
@@ -158,6 +139,7 @@ class ZFSCalculation:
             self.ddig = cp.asarray(ddig[np.triu_indices(3)])
         else:
             self.ddig = ddig[np.triu_indices(3)]
+        """
         self.print_memory_usage()
 
         # Compute contribution to D tensor from every pair of electrons
@@ -186,29 +168,27 @@ class ZFSCalculation:
 
             # --- GPAW --- #
             if wfc.gpaw:
-                
-                psi1r = wfc.get_psir_gpaw(i)
-                psi2r = wfc.get_psir_gpaw(j)
-                rhog = compute_rhog_gpaw(psi1r, psi2r, self.ft)
-                #rhog = rhog[mask]  # Remove G = 0
 
-                """
+                psi1r = wfc.get_psir_gpaw(wfc.iorb_sb_map[i])
+                psi2r = wfc.get_psir_gpaw(wfc.iorb_sb_map[j])
+                rhog = compute_rhog_gpaw(psi1r, psi2r, wfc.calc_gpaw.wfs.pd)
+                rhog = rhog[mask]  # Remove G = 0
+
                 fac = 2 * chi * prefactor * self.cell.omega
                 D_pair = np.sum( fac * self.ddig * rhog[None, None, :], axis=2 )
-                
+
                 self.I[iloc, jloc, ...] = np.real( D_pair[np.triu_indices(3)] )
                 c.count()
 
                 continue
-                """
-            else:
 
-                psi1r = wfc.get_psir(i)
-                psi2r = wfc.get_psir(j)
-                rho1g = wfc.get_rhog(i)
-                rho2g = wfc.get_rhog(j)
 
-                rhog = compute_rhog(psi1r, psi2r, self.ft, rho1g=rho1g, rho2g=rho2g)
+            psi1r = wfc.get_psir(i)
+            psi2r = wfc.get_psir(j)
+            rho1g = wfc.get_rhog(i)
+            rho2g = wfc.get_rhog(j)
+            
+            rhog = compute_rhog(psi1r, psi2r, self.ft, rho1g=rho1g, rho2g=rho2g)
 
             # Factor to be multiplied with I:
             #   chi comes from spin direction

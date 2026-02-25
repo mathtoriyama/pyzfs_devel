@@ -218,17 +218,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
                 pass
         comm.barrier()
 
-        if self.memory == "high":
-            self.wfc.compute_all_psir()
-            self.wfc.clear_all_psig_arr()
-            self.wfc.compute_all_rhog()
-        elif self.memory == "low":
-            self.wfc.compute_all_psir()
-            self.wfc.clear_all_psig_arr()
-        elif self.memory == "critical":
-            pass
-        else:
-            raise ValueError
+
 
 
     def set_psir_gpaw_Old(self, iorb):
