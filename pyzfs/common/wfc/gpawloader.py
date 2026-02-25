@@ -8,6 +8,9 @@ from .baseloader import WavefunctionLoader
 from ..cell import Cell
 from ..ft import FourierTransform
 from .wavefunction import Wavefunction
+from ..counter import Counter
+from ..parallel import SymmetricDistributedMatrix
+
 from ...common.misc import empty_ase_cell
 from ..units import bohr_to_angstrom
 
@@ -120,7 +123,114 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
 
     def load(self, iorbs, sdm):
-        pass
+        super(GPAWWavefunctionLoader, self).load(iorbs, sdm)
+        assert isinstance(sdm, SymmetricDistributedMatrix)
+        comm = sdm.comm
+        rank = sdm.pgrid.rank
+        onroot = sdm.onroot
+
+        # processor 0 parse wavefunctions
+        psig_arrs_all = None
+        ngvecs = self.wfc.gvecs.shape[0]
+        if onroot:
+            psig_arrs_all = np.zeros([sdm.mx, ngvecs], dtype=complex)
+            c = Counter(
+                self.wfc.norbs,
+                percent=0.1,
+                message="(process 0) {n} orbitals ({percent}%) loaded in {dt}...",
+            )
+
+            nbands = calc.get_number_of_bands()
+            for ispin in range(2):
+                for iband in range(nbands):
+                    psir = self.calc_gpaw.get_pseudo_wave_function(band=iband, spin=ispin)  # Units 1/Angstrom^(3/2), https://gpaw.readthedocs.io/devel/paw.html#gpaw.calculator.GPAW.get_pseudo_wave_function
+                    psig = self.calc_gpaw.wfs.pd.fft(psir)
+                    iorb = self.wfc.sb_iorb_map.get(
+                        ("up" if ispin == 0 else "down", iband)
+                    )
+                    if iorb is not None:
+                        offset = _compute_offset(sdm, iorb)
+                        psig_arrs_all[offset] = psig
+                        c.count()
+
+            """
+            for ispin in range(2):
+                wfcfile = "wfcup1.hdf5" if ispin == 0 else "wfcdw1.hdf5"
+                wfch5 = h5py.File(
+                    os.path.join(self.root, "{}.save".format(self.prefix), wfcfile), "r"
+                )
+                gvecs = np.array(wfch5["MillerIndices"], dtype=int)
+                ngvecs = gvecs.shape[0]
+                assert gvecs.shape == (ngvecs, 3)
+                evc = np.array(wfch5["evc"])
+                for ievc in range(evc.shape[0]):
+                    band = ievc + 1
+                    iorb = self.wfc.sb_iorb_map.get(
+                        ("up" if ispin == 0 else "down", band)
+                    )
+                    if iorb is not None:
+                        offset = _compute_offset(sdm, iorb)
+                        psig_arrs_all[offset] = evc[ievc].view(complex)
+                        c.count()
+            """
+
+        # scatter wavefunctions
+        # allocate wfc arrays
+        psig_arrs_m = np.zeros([sdm.mlocx, ngvecs], dtype=complex)
+        psig_arrs_n = np.zeros([sdm.nlocx, ngvecs], dtype=complex)
+        comm.barrier()
+
+        # root -> first column scatter
+        if onroot:
+            print("QEHDF5WavefunctionLoader: root -> first column scattering")
+        if sdm.icol == 0:
+            sdm.colcomm.Scatter(sendbuf=psig_arrs_all, recvbuf=psig_arrs_m, root=0)
+        comm.barrier()
+
+        # first column -> other column bcast
+        if onroot:
+            print("QEHDF5WavefunctionLoader: first column -> other column bcast")
+        sdm.rowcomm.Bcast(psig_arrs_m, root=0)
+        comm.barrier()
+
+        # root -> first row scatter
+        if onroot:
+            print("QEHDF5WavefunctionLoader: root -> first row scattering")
+        if sdm.irow == 0:
+            sdm.rowcomm.Scatter(sendbuf=psig_arrs_all, recvbuf=psig_arrs_n, root=0)
+        comm.barrier()
+
+        # first row -> other row bcast
+        if onroot:
+            print("QEHDF5WavefunctionLoader: first row -> other row bcast")
+        sdm.colcomm.Bcast(psig_arrs_n, root=0)
+        comm.barrier()
+
+        if onroot:
+            del psig_arrs_all
+
+        for iloc in range(sdm.mloc):
+            iorb = sdm.ltog(iloc)
+            self.wfc.set_psig_arr(iorb, psig_arrs_m[iloc])
+
+        for iloc in range(sdm.nloc):
+            iorb = sdm.ltog(0, iloc)[1]
+            try:
+                self.wfc.set_psig_arr(iorb, psig_arrs_n[iloc])
+            except ValueError:
+                pass
+        comm.barrier()
+
+        if self.memory == "high":
+            self.wfc.compute_all_psir()
+            self.wfc.clear_all_psig_arr()
+            self.wfc.compute_all_rhog()
+        elif self.memory == "low":
+            self.wfc.compute_all_psir()
+            self.wfc.clear_all_psig_arr()
+        elif self.memory == "critical":
+            pass
+        else:
 
 
 
