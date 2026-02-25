@@ -1,7 +1,6 @@
 import numpy as np
 from ..ft import fftshift, ifftshift, irfftn
 from mpi4py import MPI
-from ..units import bohr_to_angstrom
 
 
 class Wavefunction:

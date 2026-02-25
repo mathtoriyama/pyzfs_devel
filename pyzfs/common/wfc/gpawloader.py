@@ -9,6 +9,7 @@ from ..cell import Cell
 from ..ft import FourierTransform
 from .wavefunction import Wavefunction
 from ...common.misc import empty_ase_cell
+from ..units import bohr_to_angstrom
 
 from gpaw import GPAW
 from gpaw.old.pw.descriptor import PWDescriptor
@@ -25,7 +26,9 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         super(GPAWWavefunctionLoader, self).scan()
         
         # Load GPAW calculator
-        self.calc_gpaw = GPAW(self.gpwfile, communicator=serial_comm)
+        self.calc_gpaw = GPAW(  self.gpwfile, 
+                                communicator = serial_comm, 
+                                parallel = {'gpu': False} )
         wfs = self.calc_gpaw.wfs
         
         # Parse cell
@@ -49,13 +52,15 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         occs = [kpt.f_n for kpt in wfs.kpt_u]
         iuorbs = np.where(occs[0] > 0.8)[0]
         idorbs = np.where(occs[1] > 0.8)[0]
-        iorb_sb_map = (
-            [("up", int(n)) for n in iuorbs] +
-            [("down", int(n)) for n in idorbs]
-        )
+        
         nuorbs = len(iuorbs)
         ndorbs = len(idorbs)
         norbs = nuorbs + ndorbs
+        
+        iorb_sb_map = list(
+            ("up", iuorbs[iwfc]) if iwfc < nuorbs else ("down", idorbs[iwfc - nuorbs])
+            for iwfc in range(norbs)
+        )
         iorb_fname_map = ["None"] * norbs  # GPAW does not use files
 
         # G-vectors
@@ -81,15 +86,9 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         )
 
 
-        """
-        #self.wfc.add_gpaw_calc(calc_gpaw=self.calc_gpaw)
-        self.wfc.add_gpaw_calc( calc_gpaw = self.calc_gpaw, 
-                                ae = self.ae,
-                                )
-        """
-
         # Set indicator of GPAW calc
         self.wfc.gpaw = True
+        self.wfc.pd = self.calc_gpaw.wfs.pd
 
         # Setting for all-electron calc
         if self.ae:
@@ -109,7 +108,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
 
         # Set all wave functions
-        for iorb in iorb_sb_map:
+        for iorb in range(len(self.wfc.iorb_sb_map)):
             self.set_psir_gpaw(iorb)
 
         # Add function to self.wfc object
@@ -130,9 +129,10 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
             ispin = 0
         elif spin == "down":
             ispin = 1
+        iband = self.wfc.iorb_sb_map[iorb][1]
 
         if not self.ae:
-            psir = self.calc_gpaw.get_pseudo_wave_function(band=iorb, spin=ispin)  # Units 1/Angstrom^(3/2), https://gpaw.readthedocs.io/devel/paw.html#gpaw.calculator.GPAW.get_pseudo_wave_function
+            psir = self.calc_gpaw.get_pseudo_wave_function(band=iband, spin=ispin)  # Units 1/Angstrom^(3/2), https://gpaw.readthedocs.io/devel/paw.html#gpaw.calculator.GPAW.get_pseudo_wave_function
             """
             wfs = self.calc_gpaw_gpaw.wfs
             local_gs = wfs.gd.n_c
@@ -142,7 +142,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
         else:
             # Get all-electron wave function
-            psir_ae = self.calc_gpaw_ps2ae.get_wave_function(n=iorb, s=ispin, ae=True)
+            psir_ae = self.calc_gpaw_ps2ae.get_wave_function(n=iband, s=ispin, ae=True)
 
             # Coarsen all-electron WF to same grid as pseudo WF
             psir = interpn(self.coords_ae, psir_ae, self.coords_ps_t)
@@ -155,4 +155,6 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
     def get_psir_gpaw(self, iorb):
         """Get psi(r) of certain index, GPAW edition"""
-        return self.iorb_psir_map[iorb]
+        return self.wfc.iorb_psir_map[iorb]
+
+

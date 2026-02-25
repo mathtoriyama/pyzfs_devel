@@ -141,7 +141,7 @@ class ZFSCalculation:
         if self.pgrid.onroot:
             print("\nComputing dipole-dipole interaction tensor in G space...\n")
 
-        if self.wfc.calc_gpaw is not None:
+        if self.wfc.gpaw:
             mask = np.sum(self.wfc.gvecs**2, axis=1) > 0  # mask to remove G = 0
             ddig = compute_ddig_gpaw(self.wfc.gvecs)
             self.ddig = ddig[:, :, mask]
@@ -180,13 +180,9 @@ class ZFSCalculation:
             # --- GPAW --- #
             if wfc.gpaw:
                 
-                """
-                psi1r = wfc.get_psir_gpaw(wfc.iorb_sb_map[i])
-                psi2r = wfc.get_psir_gpaw(wfc.iorb_sb_map[j])
-                """
                 psi1r = wfc.get_psir_gpaw(i)
                 psi2r = wfc.get_psir_gpaw(j)
-                rhog = compute_rhog_gpaw(psi1r, psi2r, wfc.calc_gpaw.wfs.pd)
+                rhog = compute_rhog_gpaw(psi1r, psi2r, wfc.pd)
                 rhog = rhog[mask]  # Remove G = 0
 
                 fac = 2 * chi * prefactor * self.cell.omega
