@@ -148,13 +148,19 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
             psir = interpn(self.coords_ae, psir_ae, self.coords_ps_t)
 
         psir *= bohr_to_angstrom**(3./2)  # Convert units from 1/Angstrom^(3/2) to 1/bohr^(3/2)
+        #self.wfc.iorb_psir_map[iorb] = psir
 
-        self.wfc.iorb_psir_map[iorb] = psir
+        # Convert to reciprocal space (save space)
+        psig = self.wfc.pd.fft(psir)
+        del psir
+        self.wfc.iorb_psig_arr_map[iorb] = psig
 
 
 
     def get_psir_gpaw(self, iorb):
         """Get psi(r) of certain index, GPAW edition"""
-        return self.wfc.iorb_psir_map[iorb]
+        #return self.wfc.iorb_psir_map[iorb]
+
+        return self.wfc.pd.ifft( self.wfc.iorb_psig_arr_map[iorb] )
 
 
