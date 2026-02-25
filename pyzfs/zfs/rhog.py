@@ -115,7 +115,8 @@ def pd_fft_norm(f_R, pw_desc: PWDescriptor):
     return pw_desc.fft(f_R) / f_R.flatten().shape[0]
 
 
-def compute_rhog_gpaw(psi1r, psi2r, pw_desc: PWDescriptor):
+#def compute_rhog_gpaw(psi1r, psi2r, pw_desc: PWDescriptor):
+def compute_rhog_gpaw(psi1r, psi2r, ft):
     """Compute rho(G, -G) for two electrons occupying two (KS) orbitals, GPAW edition.
 
     See compute_rhog (above) for theoretical description.
@@ -133,6 +134,7 @@ def compute_rhog_gpaw(psi1r, psi2r, pw_desc: PWDescriptor):
     except ImportError:
         import numpy as np
 
+    """
     f1g = pd_fft_norm(psi1r * np.conj(psi1r), pw_desc)
     f2g = pd_fft_norm(psi2r * np.conj(psi2r), pw_desc)
     f3g = pd_fft_norm(psi1r * np.conj(psi2r), pw_desc)
@@ -140,7 +142,7 @@ def compute_rhog_gpaw(psi1r, psi2r, pw_desc: PWDescriptor):
     f1g = ft.forward(psi1r * np.conj(psi1r))
     f2g = ft.forward(psi2r * np.conj(psi2r))
     f3g = ft.forward(psi1r * np.conj(psi2r))
-    """
+    
     rhog = f1g * np.conj(f2g) - f3g * np.conj(f3g)
     return rhog
 

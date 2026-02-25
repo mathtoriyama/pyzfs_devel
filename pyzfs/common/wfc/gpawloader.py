@@ -20,7 +20,7 @@ from gpaw.mpi import serial_comm
 from gpaw.utilities.ps2ae import PS2AE
 
 def _compute_offset(sdm, iorb):
-    """compute the index for iorb^th wfc, note that some rows in psig_arrs_all
+    """compute the index for iorb^th wfc, note that some rows in psir_arrs_all
     are zero to facilitate MPI scatter"""
     nproc = iloc = 0
     for iproc in range(sdm.pgrid.nrow):
@@ -110,6 +110,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         # Set indicator of GPAW calc
         self.wfc.gpaw = True
         self.wfc.pd = self.calc_gpaw.wfs.pd
+        self.wfc.gd_Nc = self.calc_gpaw.wfs.gd.N_c
 
         """
         # Setting for all-electron calc
@@ -148,10 +149,10 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         onroot = sdm.onroot
 
         # processor 0 parse wavefunctions
-        psig_arrs_all = None
+        psir_arrs_all = None
         ngvecs = self.wfc.gvecs.shape[0]
         if onroot:
-            psig_arrs_all = np.zeros([sdm.mx, ngvecs], dtype=complex)
+            psir_arrs_all = np.zeros([sdm.mx, ngvecs], dtype=complex)
             c = Counter(
                 self.wfc.norbs,
                 percent=0.1,
@@ -165,73 +166,67 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
                     psir = self.calc_gpaw.get_pseudo_wave_function(band=iband, spin=ispin)  # Units 1/Angstrom^(3/2), https://gpaw.readthedocs.io/devel/paw.html#gpaw.calculator.GPAW.get_pseudo_wave_function
                     psir *= bohr_to_angstrom**(3./2)  # Convert units from 1/Angstrom^(3/2) to 1/bohr^(3/2)
 
-                    psig = self.calc_gpaw.wfs.pd.fft(psir)
                     iorb = self.wfc.sb_iorb_map.get(
                         ("up" if ispin == 0 else "down", iband)
                     )
                     if iorb is not None:
                         offset = _compute_offset(sdm, iorb)
-                        psig_arrs_all[offset] = psig
+                        psir_arrs_all[offset] = psir.flatten()
                         c.count()
 
         # scatter wavefunctions
         # allocate wfc arrays
-        psig_arrs_m = np.zeros([sdm.mlocx, ngvecs], dtype=complex)
-        psig_arrs_n = np.zeros([sdm.nlocx, ngvecs], dtype=complex)
+        psir_arrs_m = np.zeros([sdm.mlocx, ngvecs], dtype=complex)
+        psir_arrs_n = np.zeros([sdm.nlocx, ngvecs], dtype=complex)
         comm.barrier()
 
         # root -> first column scatter
         if onroot:
             print("QEHDF5WavefunctionLoader: root -> first column scattering")
         if sdm.icol == 0:
-            sdm.colcomm.Scatter(sendbuf=psig_arrs_all, recvbuf=psig_arrs_m, root=0)
+            sdm.colcomm.Scatter(sendbuf=psir_arrs_all, recvbuf=psir_arrs_m, root=0)
         comm.barrier()
 
         # first column -> other column bcast
         if onroot:
             print("QEHDF5WavefunctionLoader: first column -> other column bcast")
-        sdm.rowcomm.Bcast(psig_arrs_m, root=0)
+        sdm.rowcomm.Bcast(psir_arrs_m, root=0)
         comm.barrier()
 
         # root -> first row scatter
         if onroot:
             print("QEHDF5WavefunctionLoader: root -> first row scattering")
         if sdm.irow == 0:
-            sdm.rowcomm.Scatter(sendbuf=psig_arrs_all, recvbuf=psig_arrs_n, root=0)
+            sdm.rowcomm.Scatter(sendbuf=psir_arrs_all, recvbuf=psir_arrs_n, root=0)
         comm.barrier()
 
         # first row -> other row bcast
         if onroot:
             print("QEHDF5WavefunctionLoader: first row -> other row bcast")
-        sdm.colcomm.Bcast(psig_arrs_n, root=0)
+        sdm.colcomm.Bcast(psir_arrs_n, root=0)
         comm.barrier()
 
         if onroot:
-            del psig_arrs_all
+            del psir_arrs_all
 
         for iloc in range(sdm.mloc):
             iorb = sdm.ltog(iloc)
-            self.wfc.set_psig_arr(iorb, psig_arrs_m[iloc])
+            self.wfc.set_psir_arr(iorb, psir_arrs_m[iloc])
 
         for iloc in range(sdm.nloc):
             iorb = sdm.ltog(0, iloc)[1]
             try:
-                self.wfc.set_psig_arr(iorb, psig_arrs_n[iloc])
+                self.wfc.set_psir_arr(iorb, psir_arrs_n[iloc])
             except ValueError:
                 pass
         comm.barrier()
 
 
 
-
-
     def get_psir_gpaw(self, iorb):
         """Get psi(r) of certain index, GPAW edition"""
 
-        psig = self.wfc.iorb_psig_arr_map[iorb]
-        psir = self.wfc.pd.ifft(psig)
-        return psir
-
+        return self.wfc.iorb_psir_arr_map[iorb].reshape(self.wfc.gd_Nc)
 
 
 
@@ -275,7 +270,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         # Convert to reciprocal space (save space)
         psig = self.wfc.pd.fft(psir)
         del psir
-        self.wfc.iorb_psig_arr_map[iorb] = psig
+        self.wfc.iorb_psir_arr_map[iorb] = psig
 
 
 
@@ -283,7 +278,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         """Get psi(r) of certain index, GPAW edition"""
         #return self.wfc.iorb_psir_map[iorb]
 
-        return self.wfc.pd.ifft( self.wfc.iorb_psig_arr_map[iorb] )
+        return self.wfc.pd.ifft( self.wfc.iorb_psir_arr_map[iorb] )
 
 
 

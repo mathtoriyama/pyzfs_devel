@@ -171,7 +171,8 @@ class ZFSCalculation:
 
                 psi1r = wfc.get_psir_gpaw(i)
                 psi2r = wfc.get_psir_gpaw(j)
-                rhog = compute_rhog_gpaw(psi1r, psi2r, wfc.pd)
+                #rhog = compute_rhog_gpaw(psi1r, psi2r, wfc.pd)
+                rhog = compute_rhog_gpaw(psi1r, psi2r, self.ft)
                 rhog = rhog[mask]  # Remove G = 0
 
                 fac = 2 * chi * prefactor * self.cell.omega
