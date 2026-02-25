@@ -30,26 +30,28 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
                                 communicator = serial_comm, 
                                 )
         wfs = self.calc_gpaw.wfs
-        
+        self.calc_gpaw_ps2ae = PS2AE(self.calc_gpaw)
+
         # Parse cell
         cell = Cell(empty_ase_cell(
             *self.calc_gpaw.atoms.get_cell().array.T,
             unit="angstrom"
         ))
 
-        # Create dummy ft objects
-        self.wft = FourierTransform(1, 1, 1)
-        self.dft = FourierTransform(1, 1, 1)
+        # Create FT objects
+        grid = self.calc_gpaw_ps2ae.gd.N_c
+        self.wft = FourierTransform(grid[0], grid[1], grid[2])
+        self.dft = FourierTransform(grid[0], grid[1], grid[2])
                 
         # Spin / k-point sanity checks
         assert self.calc_gpaw.get_number_of_spins() == 2
-        assert len(wfs.kpt_u) == 2  # up, down
-        for kpt in wfs.kpt_u:
+        assert len(self.calc_gpaw.wfs.kpt_u) == 2  # up, down
+        for kpt in self.calc_gpaw.wfs.kpt_u:
             assert kpt.k == 0.0  # Gamma only
         self.gamma = True
 
         # Occupied orbitals
-        occs = [kpt.f_n for kpt in wfs.kpt_u]
+        occs = [kpt.f_n for kpt in self.calc_gpaw.wfs.kpt_u]
         iuorbs = np.where(occs[0] > 0.8)[0]
         idorbs = np.where(occs[1] > 0.8)[0]
         
@@ -64,9 +66,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         iorb_fname_map = ["None"] * norbs  # GPAW does not use files
 
         # G-vectors
-        pd = wfs.pd
-        assert isinstance(pd, PWDescriptor)
-        self.gvecs = wfs.pd.get_reciprocal_vectors(add_q=False) # Splits Gvecs in MPI, but want all processes to have all Gvecs
+        self.gvecs = self.calc_gpaw.wfs.pd.get_reciprocal_vectors(add_q=False) # Splits Gvecs in MPI, but want all processes to have all Gvecs
         """
         assert len(pd.Q_qG) == 1, "Various numbers of reciprocal vectors detected..."
         indices = pd.Q_qG[0]
@@ -90,6 +90,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         self.wfc.gpaw = True
         self.wfc.pd = self.calc_gpaw.wfs.pd
 
+        """
         # Setting for all-electron calc
         if self.ae:
 
@@ -110,6 +111,8 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         # Set all wave functions
         for iorb in range(len(self.wfc.iorb_sb_map)):
             self.set_psir_gpaw(iorb)
+        """
+
 
         # Add function to self.wfc object
         self.wfc.get_psir_gpaw = self.get_psir_gpaw
@@ -121,7 +124,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
 
 
-    def set_psir_gpaw(self, iorb):
+    def set_psir_gpaw_Old(self, iorb):
         """Set psi(r) for each iorb index, GPAW edition"""
 
         spin = self.wfc.iorb_sb_map[iorb][0]
@@ -157,10 +160,39 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
 
 
-    def get_psir_gpaw(self, iorb):
+    def get_psir_gpaw_Old(self, iorb):
         """Get psi(r) of certain index, GPAW edition"""
         #return self.wfc.iorb_psir_map[iorb]
 
         return self.wfc.pd.ifft( self.wfc.iorb_psig_arr_map[iorb] )
+
+
+
+
+    def get_psir_gpaw(self, iorb):
+
+        spin = self.wfc.iorb_sb_map[iorb][0]
+        if spin == "up":
+            ispin = 0
+        elif spin == "down":
+            ispin = 1
+        iband = self.wfc.iorb_sb_map[iorb][1]
+
+        if not self.ae:
+            psir = self.calc_gpaw.get_pseudo_wave_function(band=iband, spin=ispin)  # Units 1/Angstrom^(3/2), https://gpaw.readthedocs.io/devel/paw.html#gpaw.calculator.GPAW.get_pseudo_wave_function
+            """
+            wfs = self.calc_gpaw_gpaw.wfs
+            local_gs = wfs.gd.n_c
+            gpaw_wf = wfs.pd.ifft(wfs.kpt_u[ispin].psit_nG[iorb])  # Domain-decomposed local wave function for MPI process
+            assert np.all(gpaw_wf.shape == local_gs), "Shapes are wrong... Exiting."
+            """
+
+        else:
+            # Get all-electron wave function
+            psir = self.calc_gpaw_ps2ae.get_wave_function(n=iband, s=ispin, ae=True)
+
+        psir *= bohr_to_angstrom**(3./2)  # Convert units from 1/Angstrom^(3/2) to 1/bohr^(3/2)
+
+        return psir
 
 
