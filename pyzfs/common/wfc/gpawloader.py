@@ -150,9 +150,9 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
         # processor 0 parse wavefunctions
         psir_arrs_all = None
-        ngvecs = self.wfc.gvecs.shape[0]
+        arr_len = np.prod(self.wfc.gd_Nc)
         if onroot:
-            psir_arrs_all = np.zeros([sdm.mx, ngvecs], dtype=complex)
+            psir_arrs_all = np.zeros([sdm.mx, arr_len], dtype=complex)
             c = Counter(
                 self.wfc.norbs,
                 percent=0.1,
@@ -176,8 +176,8 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
         # scatter wavefunctions
         # allocate wfc arrays
-        psir_arrs_m = np.zeros([sdm.mlocx, ngvecs], dtype=complex)
-        psir_arrs_n = np.zeros([sdm.nlocx, ngvecs], dtype=complex)
+        psir_arrs_m = np.zeros([sdm.mlocx, arr_len], dtype=complex)
+        psir_arrs_n = np.zeros([sdm.nlocx, arr_len], dtype=complex)
         comm.barrier()
 
         # root -> first column scatter
@@ -226,11 +226,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
     def get_psir_gpaw(self, iorb):
         """Get psi(r) of certain index, GPAW edition"""
 
-        return self.wfc.iorb_psir_arr_map[iorb].reshape(self.wfc.gd_Nc)
-
-
-
-
+        return self.wfc.iorb_psir_arr_map[iorb].reshape(*self.wfc.gd_Nc)
 
 
 

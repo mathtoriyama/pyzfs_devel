@@ -122,7 +122,7 @@ class ZFSCalculation:
         if self.pgrid.onroot:
             print("\nComputing dipole-dipole interaction tensor in G space...\n")
 
-        
+        """
         if self.wfc.gpaw:
             mask = np.sum(self.wfc.gvecs**2, axis=1) > 0  # mask to remove G = 0
             ddig = compute_ddig_gpaw(self.wfc.gvecs)
@@ -139,7 +139,7 @@ class ZFSCalculation:
             self.ddig = cp.asarray(ddig[np.triu_indices(3)])
         else:
             self.ddig = ddig[np.triu_indices(3)]
-        """
+        
         self.print_memory_usage()
 
         # Compute contribution to D tensor from every pair of electrons
@@ -173,6 +173,8 @@ class ZFSCalculation:
                 psi2r = wfc.get_psir_gpaw(j)
                 #rhog = compute_rhog_gpaw(psi1r, psi2r, wfc.pd)
                 rhog = compute_rhog_gpaw(psi1r, psi2r, self.ft)
+                
+                """
                 rhog = rhog[mask]  # Remove G = 0
 
                 fac = 2 * chi * prefactor * self.cell.omega
@@ -182,14 +184,16 @@ class ZFSCalculation:
                 c.count()
 
                 continue
-
-
-            psi1r = wfc.get_psir(i)
-            psi2r = wfc.get_psir(j)
-            rho1g = wfc.get_rhog(i)
-            rho2g = wfc.get_rhog(j)
+                """
             
-            rhog = compute_rhog(psi1r, psi2r, self.ft, rho1g=rho1g, rho2g=rho2g)
+            else:
+
+                psi1r = wfc.get_psir(i)
+                psi2r = wfc.get_psir(j)
+                rho1g = wfc.get_rhog(i)
+                rho2g = wfc.get_rhog(j)
+                
+                rhog = compute_rhog(psi1r, psi2r, self.ft, rho1g=rho1g, rho2g=rho2g)
 
             # Factor to be multiplied with I:
             #   chi comes from spin direction
