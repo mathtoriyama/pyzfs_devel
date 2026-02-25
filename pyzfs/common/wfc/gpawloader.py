@@ -161,7 +161,10 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
             nbands = self.calc_gpaw.get_number_of_bands()
             for ispin in range(2):
                 for iband in range(nbands):
+
                     psir = self.calc_gpaw.get_pseudo_wave_function(band=iband, spin=ispin)  # Units 1/Angstrom^(3/2), https://gpaw.readthedocs.io/devel/paw.html#gpaw.calculator.GPAW.get_pseudo_wave_function
+                    psir *= bohr_to_angstrom**(3./2)  # Convert units from 1/Angstrom^(3/2) to 1/bohr^(3/2)
+
                     psig = self.calc_gpaw.wfs.pd.fft(psir)
                     iorb = self.wfc.sb_iorb_map.get(
                         ("up" if ispin == 0 else "down", iband)
@@ -221,6 +224,25 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
 
 
+
+    def get_psir_gpaw(self, iorb):
+        """Get psi(r) of certain index, GPAW edition"""
+
+        psig = self.wfc.iorb_psig_arr_map[iorb]
+        psir = self.wfc.pd.ifft(psig)
+        return psir
+
+
+
+
+
+
+
+
+
+
+
+
     def set_psir_gpaw_Old(self, iorb):
         """Set psi(r) for each iorb index, GPAW edition"""
 
@@ -266,7 +288,8 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
 
 
 
-    def get_psir_gpaw(self, iorb):
+    def get_psir_gpaw_Old2(self, iorb):
+        """Get psi(r) of certain index, GPAW edition"""
 
         spin = self.wfc.iorb_sb_map[iorb][0]
         if spin == "up":
@@ -291,5 +314,6 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         psir *= bohr_to_angstrom**(3./2)  # Convert units from 1/Angstrom^(3/2) to 1/bohr^(3/2)
 
         return psir
+
 
 
