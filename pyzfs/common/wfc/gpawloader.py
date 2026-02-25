@@ -28,7 +28,7 @@ class GPAWWavefunctionLoader(WavefunctionLoader):
         # Load GPAW calculator
         self.calc_gpaw = GPAW(  self.gpwfile, 
                                 communicator = serial_comm, 
-                                parallel = {'gpu': False} )
+                                )
         wfs = self.calc_gpaw.wfs
         
         # Parse cell
