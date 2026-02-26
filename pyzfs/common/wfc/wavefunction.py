@@ -50,7 +50,6 @@ class Wavefunction:
         self.iorb_fname_map = iorb_fname_map
 
         self.iorb_psig_arr_map = {}
-        self.iorb_psir_arr_map = {}
         self.iorb_psir_map = {}
         self.iorb_rhog_map = {}
 
@@ -62,8 +61,6 @@ class Wavefunction:
             yzplane[self.ft.n2 // 2 + 1 :, :] = 1
             yzplane[0, self.ft.n3 // 2 + 1 :] = 1
             self.yzlowerplane = list(zip(*np.nonzero(yzplane)))
-
-        self.gpaw = False
 
     def compute_psir_from_psig_arr(self, psig_arr):
         """Compute psi(r) based on psi(G) defined on self.gvecs"""
@@ -108,13 +105,6 @@ class Wavefunction:
         if iorb in self.iorb_psig_arr_map:
             raise ValueError("psig_arr {} already set".format(iorb))
         self.iorb_psig_arr_map[iorb] = psig_arr
-
-
-    def set_psir_arr(self, iorb, psir_arr):
-        if iorb in self.iorb_psir_arr_map:
-            raise ValueError("psir_arr {} already set".format(iorb))
-        self.iorb_psir_arr_map[iorb] = psir_arr
-
 
     def set_psir(self, iorb, psir):
         if iorb in self.iorb_psir_map:
