@@ -2,7 +2,6 @@ from __future__ import absolute_import, division, print_function
 import numpy as np
 import os, sys
 from mpi4py import MPI
-from scipy.interpolate import interpn
 
 from .baseloader import WavefunctionLoader
 from ..cell import Cell
