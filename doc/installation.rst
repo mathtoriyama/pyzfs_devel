@@ -43,3 +43,8 @@ GPU
    $ pip install cupy-cuda110
 
 Note that the version of **cupy** must be compatible to the version of CUDA installed on the system, which in the above example is version 11.0. At runtime, **PyZFS** automatically tries to import the **cupy** module and uses all available GPUs. If **cupy** cannot be imported, **PyZFS** falls back to **NumPy** and runs on CPUs.
+
+GPAW
+----
+
+**PyZFS** can also interface with the **GPAW** package. To use this feature, please ensure that **GPAW** is properly installed. Internally, **PyZFS** tries to import the **GPAW** module when the ``GPAWWavefunctionLoader()`` object is initialized.
