@@ -1,0 +1,610 @@
+
+GPAWWavefunctionLoader: scanning current working directory "/scratch/midway3/toriyama/hBN/ZFS_Monolayer/GPAW/NV_Diamond/MPI_GPAW/For_PyZFS_Tutorial/ZFS_AE_R4"...
+
+   nuwfcs = 128, ndwfcs = 126, nwfcs = 254
+     spin = up     band = 0     file = None
+     spin = up     band = 1     file = None
+     spin = up     band = 2     file = None
+     spin = up     band = 3     file = None
+     spin = up     band = 4     file = None
+     spin = up     band = 5     file = None
+     spin = up     band = 6     file = None
+     spin = up     band = 7     file = None
+     spin = up     band = 8     file = None
+     spin = up     band = 9     file = None
+     spin = up     band = 10     file = None
+     spin = up     band = 11     file = None
+     spin = up     band = 12     file = None
+     spin = up     band = 13     file = None
+     spin = up     band = 14     file = None
+     spin = up     band = 15     file = None
+     spin = up     band = 16     file = None
+     spin = up     band = 17     file = None
+     spin = up     band = 18     file = None
+     spin = up     band = 19     file = None
+     spin = up     band = 20     file = None
+     spin = up     band = 21     file = None
+     spin = up     band = 22     file = None
+     spin = up     band = 23     file = None
+     spin = up     band = 24     file = None
+     spin = up     band = 25     file = None
+     spin = up     band = 26     file = None
+     spin = up     band = 27     file = None
+     spin = up     band = 28     file = None
+     spin = up     band = 29     file = None
+     spin = up     band = 30     file = None
+     spin = up     band = 31     file = None
+     spin = up     band = 32     file = None
+     spin = up     band = 33     file = None
+     spin = up     band = 34     file = None
+     spin = up     band = 35     file = None
+     spin = up     band = 36     file = None
+     spin = up     band = 37     file = None
+     spin = up     band = 38     file = None
+     spin = up     band = 39     file = None
+     spin = up     band = 40     file = None
+     spin = up     band = 41     file = None
+     spin = up     band = 42     file = None
+     spin = up     band = 43     file = None
+     spin = up     band = 44     file = None
+     spin = up     band = 45     file = None
+     spin = up     band = 46     file = None
+     spin = up     band = 47     file = None
+     spin = up     band = 48     file = None
+     spin = up     band = 49     file = None
+     spin = up     band = 50     file = None
+     spin = up     band = 51     file = None
+     spin = up     band = 52     file = None
+     spin = up     band = 53     file = None
+     spin = up     band = 54     file = None
+     spin = up     band = 55     file = None
+     spin = up     band = 56     file = None
+     spin = up     band = 57     file = None
+     spin = up     band = 58     file = None
+     spin = up     band = 59     file = None
+     spin = up     band = 60     file = None
+     spin = up     band = 61     file = None
+     spin = up     band = 62     file = None
+     spin = up     band = 63     file = None
+     spin = up     band = 64     file = None
+     spin = up     band = 65     file = None
+     spin = up     band = 66     file = None
+     spin = up     band = 67     file = None
+     spin = up     band = 68     file = None
+     spin = up     band = 69     file = None
+     spin = up     band = 70     file = None
+     spin = up     band = 71     file = None
+     spin = up     band = 72     file = None
+     spin = up     band = 73     file = None
+     spin = up     band = 74     file = None
+     spin = up     band = 75     file = None
+     spin = up     band = 76     file = None
+     spin = up     band = 77     file = None
+     spin = up     band = 78     file = None
+     spin = up     band = 79     file = None
+     spin = up     band = 80     file = None
+     spin = up     band = 81     file = None
+     spin = up     band = 82     file = None
+     spin = up     band = 83     file = None
+     spin = up     band = 84     file = None
+     spin = up     band = 85     file = None
+     spin = up     band = 86     file = None
+     spin = up     band = 87     file = None
+     spin = up     band = 88     file = None
+     spin = up     band = 89     file = None
+     spin = up     band = 90     file = None
+     spin = up     band = 91     file = None
+     spin = up     band = 92     file = None
+     spin = up     band = 93     file = None
+     spin = up     band = 94     file = None
+     spin = up     band = 95     file = None
+     spin = up     band = 96     file = None
+     spin = up     band = 97     file = None
+     spin = up     band = 98     file = None
+     spin = up     band = 99     file = None
+     spin = up     band = 100     file = None
+     spin = up     band = 101     file = None
+     spin = up     band = 102     file = None
+     spin = up     band = 103     file = None
+     spin = up     band = 104     file = None
+     spin = up     band = 105     file = None
+     spin = up     band = 106     file = None
+     spin = up     band = 107     file = None
+     spin = up     band = 108     file = None
+     spin = up     band = 109     file = None
+     spin = up     band = 110     file = None
+     spin = up     band = 111     file = None
+     spin = up     band = 112     file = None
+     spin = up     band = 113     file = None
+     spin = up     band = 114     file = None
+     spin = up     band = 115     file = None
+     spin = up     band = 116     file = None
+     spin = up     band = 117     file = None
+     spin = up     band = 118     file = None
+     spin = up     band = 119     file = None
+     spin = up     band = 120     file = None
+     spin = up     band = 121     file = None
+     spin = up     band = 122     file = None
+     spin = up     band = 123     file = None
+     spin = up     band = 124     file = None
+     spin = up     band = 125     file = None
+     spin = up     band = 126     file = None
+     spin = up     band = 127     file = None
+     spin = down     band = 0     file = None
+     spin = down     band = 1     file = None
+     spin = down     band = 2     file = None
+     spin = down     band = 3     file = None
+     spin = down     band = 4     file = None
+     spin = down     band = 5     file = None
+     spin = down     band = 6     file = None
+     spin = down     band = 7     file = None
+     spin = down     band = 8     file = None
+     spin = down     band = 9     file = None
+     spin = down     band = 10     file = None
+     spin = down     band = 11     file = None
+     spin = down     band = 12     file = None
+     spin = down     band = 13     file = None
+     spin = down     band = 14     file = None
+     spin = down     band = 15     file = None
+     spin = down     band = 16     file = None
+     spin = down     band = 17     file = None
+     spin = down     band = 18     file = None
+     spin = down     band = 19     file = None
+     spin = down     band = 20     file = None
+     spin = down     band = 21     file = None
+     spin = down     band = 22     file = None
+     spin = down     band = 23     file = None
+     spin = down     band = 24     file = None
+     spin = down     band = 25     file = None
+     spin = down     band = 26     file = None
+     spin = down     band = 27     file = None
+     spin = down     band = 28     file = None
+     spin = down     band = 29     file = None
+     spin = down     band = 30     file = None
+     spin = down     band = 31     file = None
+     spin = down     band = 32     file = None
+     spin = down     band = 33     file = None
+     spin = down     band = 34     file = None
+     spin = down     band = 35     file = None
+     spin = down     band = 36     file = None
+     spin = down     band = 37     file = None
+     spin = down     band = 38     file = None
+     spin = down     band = 39     file = None
+     spin = down     band = 40     file = None
+     spin = down     band = 41     file = None
+     spin = down     band = 42     file = None
+     spin = down     band = 43     file = None
+     spin = down     band = 44     file = None
+     spin = down     band = 45     file = None
+     spin = down     band = 46     file = None
+     spin = down     band = 47     file = None
+     spin = down     band = 48     file = None
+     spin = down     band = 49     file = None
+     spin = down     band = 50     file = None
+     spin = down     band = 51     file = None
+     spin = down     band = 52     file = None
+     spin = down     band = 53     file = None
+     spin = down     band = 54     file = None
+     spin = down     band = 55     file = None
+     spin = down     band = 56     file = None
+     spin = down     band = 57     file = None
+     spin = down     band = 58     file = None
+     spin = down     band = 59     file = None
+     spin = down     band = 60     file = None
+     spin = down     band = 61     file = None
+     spin = down     band = 62     file = None
+     spin = down     band = 63     file = None
+     spin = down     band = 64     file = None
+     spin = down     band = 65     file = None
+     spin = down     band = 66     file = None
+     spin = down     band = 67     file = None
+     spin = down     band = 68     file = None
+     spin = down     band = 69     file = None
+     spin = down     band = 70     file = None
+     spin = down     band = 71     file = None
+     spin = down     band = 72     file = None
+     spin = down     band = 73     file = None
+     spin = down     band = 74     file = None
+     spin = down     band = 75     file = None
+     spin = down     band = 76     file = None
+     spin = down     band = 77     file = None
+     spin = down     band = 78     file = None
+     spin = down     band = 79     file = None
+     spin = down     band = 80     file = None
+     spin = down     band = 81     file = None
+     spin = down     band = 82     file = None
+     spin = down     band = 83     file = None
+     spin = down     band = 84     file = None
+     spin = down     band = 85     file = None
+     spin = down     band = 86     file = None
+     spin = down     band = 87     file = None
+     spin = down     band = 88     file = None
+     spin = down     band = 89     file = None
+     spin = down     band = 90     file = None
+     spin = down     band = 91     file = None
+     spin = down     band = 92     file = None
+     spin = down     band = 93     file = None
+     spin = down     band = 94     file = None
+     spin = down     band = 95     file = None
+     spin = down     band = 96     file = None
+     spin = down     band = 97     file = None
+     spin = down     band = 98     file = None
+     spin = down     band = 99     file = None
+     spin = down     band = 100     file = None
+     spin = down     band = 101     file = None
+     spin = down     band = 102     file = None
+     spin = down     band = 103     file = None
+     spin = down     band = 104     file = None
+     spin = down     band = 105     file = None
+     spin = down     band = 106     file = None
+     spin = down     band = 107     file = None
+     spin = down     band = 108     file = None
+     spin = down     band = 109     file = None
+     spin = down     band = 110     file = None
+     spin = down     band = 111     file = None
+     spin = down     band = 112     file = None
+     spin = down     band = 113     file = None
+     spin = down     band = 114     file = None
+     spin = down     band = 115     file = None
+     spin = down     band = 116     file = None
+     spin = down     band = 117     file = None
+     spin = down     band = 118     file = None
+     spin = down     band = 119     file = None
+     spin = down     band = 120     file = None
+     spin = down     band = 121     file = None
+     spin = down     band = 122     file = None
+     spin = down     band = 123     file = None
+     spin = down     band = 124     file = None
+     spin = down     band = 125     file = None
+
+System Overview:
+  Cell: 
+{   'G1': array([0.46567731, 0.        , 0.        ]),
+    'G2': array([0.        , 0.46567731, 0.        ]),
+    'G3': array([0.        , 0.        , 0.46567731]),
+    'R1': array([13.49257342,  0.        ,  0.        ]),
+    'R2': array([ 0.        , 13.49257342,  0.        ]),
+    'R3': array([ 0.        ,  0.        , 13.49257342]),
+    'ase_cell': Atoms(symbols='', pbc=True, cell=[7.14, 7.14, 7.14]),
+    'omega': np.float64(2456.3167482436415)}
+  FFT Grid: 
+{   'N': np.int64(46656),
+    'n1': np.int64(36),
+    'n2': np.int64(36),
+    'n3': np.int64(36)}
+  
+  
+  Zero Field Splitting Calculation Created...
+  
+  
+    ProcessGrid (square) info:
+    rank -> (irow, icol) mapping:
+    [[0 0]
+     [0 1]
+     [0 2]
+     [0 3]
+     [0 4]
+     [0 5]
+     [1 0]
+     [1 1]
+     [1 2]
+     [1 3]
+     [1 4]
+     [1 5]
+     [2 0]
+     [2 1]
+     [2 2]
+     [2 3]
+     [2 4]
+     [2 5]
+     [3 0]
+     [3 1]
+     [3 2]
+     [3 3]
+     [3 4]
+     [3 5]
+     [4 0]
+     [4 1]
+     [4 2]
+     [4 3]
+     [4 4]
+     [4 5]
+     [5 0]
+     [5 1]
+     [5 2]
+     [5 3]
+     [5 4]
+     [5 5]]
+    (irow, icol) -> rank mapping:
+    [[ 0  1  2  3  4  5]
+     [ 6  7  8  9 10 11]
+     [12 13 14 15 16 17]
+     [18 19 20 21 22 23]
+     [24 25 26 27 28 29]
+     [30 31 32 33 34 35]]
+    rank  onroot  nrow  ncol  size  irow  icol  is_active  rowcomm_rank  colcomm_rank
+      0    True      6    6    36    0    0    True    0    0
+      1    False      6    6    36    0    1    True    1    0
+      2    False      6    6    36    0    2    True    2    0
+      3    False      6    6    36    0    3    True    3    0
+      4    False      6    6    36    0    4    True    4    0
+      5    False      6    6    36    0    5    True    5    0
+      6    False      6    6    36    1    0    True    0    1
+      7    False      6    6    36    1    1    True    1    1
+      8    False      6    6    36    1    2    True    2    1
+      9    False      6    6    36    1    3    True    3    1
+      10    False      6    6    36    1    4    True    4    1
+      11    False      6    6    36    1    5    True    5    1
+      12    False      6    6    36    2    0    True    0    2
+      13    False      6    6    36    2    1    True    1    2
+      14    False      6    6    36    2    2    True    2    2
+      15    False      6    6    36    2    3    True    3    2
+      16    False      6    6    36    2    4    True    4    2
+      17    False      6    6    36    2    5    True    5    2
+      18    False      6    6    36    3    0    True    0    3
+      19    False      6    6    36    3    1    True    1    3
+      20    False      6    6    36    3    2    True    2    3
+      21    False      6    6    36    3    3    True    3    3
+      22    False      6    6    36    3    4    True    4    3
+      23    False      6    6    36    3    5    True    5    3
+      24    False      6    6    36    4    0    True    0    4
+      25    False      6    6    36    4    1    True    1    4
+      26    False      6    6    36    4    2    True    2    4
+      27    False      6    6    36    4    3    True    3    4
+      28    False      6    6    36    4    4    True    4    4
+      29    False      6    6    36    4    5    True    5    4
+      30    False      6    6    36    5    0    True    0    5
+      31    False      6    6    36    5    1    True    1    5
+      32    False      6    6    36    5    2    True    2    5
+      33    False      6    6    36    5    3    True    3    5
+      34    False      6    6    36    5    4    True    4    5
+      35    False      6    6    36    5    5    True    5    5
+      36    False      6    6    36    -1    -1    False    0    0
+      37    False      6    6    36    -1    -1    False    1    1
+      38    False      6    6    36    -1    -1    False    2    2
+      39    False      6    6    36    -1    -1    False    3    3
+  
+  Creating I array...
+  
+    DistributedMatrix info: I
+    irow  icol  nrow  ncol  m  mloc  mstart  mend  n  nloc  nstart  nend  val.shape
+      0    0    6    6    254    43    0    43    254    43    0    43     (43, 43, 6)
+      0    1    6    6    254    43    0    43    254    43    43    86     (43, 43, 6)
+      0    2    6    6    254    43    0    43    254    42    86    128     (43, 43, 6)
+      0    3    6    6    254    43    0    43    254    42    128    170     (43, 43, 6)
+      0    4    6    6    254    43    0    43    254    42    170    212     (43, 43, 6)
+      0    5    6    6    254    43    0    43    254    42    212    254     (43, 43, 6)
+      1    0    6    6    254    43    43    86    254    43    0    43     (43, 43, 6)
+      1    1    6    6    254    43    43    86    254    43    43    86     (43, 43, 6)
+      1    2    6    6    254    43    43    86    254    42    86    128     (43, 43, 6)
+      1    3    6    6    254    43    43    86    254    42    128    170     (43, 43, 6)
+      1    4    6    6    254    43    43    86    254    42    170    212     (43, 43, 6)
+      1    5    6    6    254    43    43    86    254    42    212    254     (43, 43, 6)
+      2    0    6    6    254    42    86    128    254    43    0    43     (43, 43, 6)
+      2    1    6    6    254    42    86    128    254    43    43    86     (43, 43, 6)
+      2    2    6    6    254    42    86    128    254    42    86    128     (43, 43, 6)
+      2    3    6    6    254    42    86    128    254    42    128    170     (43, 43, 6)
+      2    4    6    6    254    42    86    128    254    42    170    212     (43, 43, 6)
+      2    5    6    6    254    42    86    128    254    42    212    254     (43, 43, 6)
+      3    0    6    6    254    42    128    170    254    43    0    43     (43, 43, 6)
+      3    1    6    6    254    42    128    170    254    43    43    86     (43, 43, 6)
+      3    2    6    6    254    42    128    170    254    42    86    128     (43, 43, 6)
+      3    3    6    6    254    42    128    170    254    42    128    170     (43, 43, 6)
+      3    4    6    6    254    42    128    170    254    42    170    212     (43, 43, 6)
+      3    5    6    6    254    42    128    170    254    42    212    254     (43, 43, 6)
+      4    0    6    6    254    42    170    212    254    43    0    43     (43, 43, 6)
+      4    1    6    6    254    42    170    212    254    43    43    86     (43, 43, 6)
+      4    2    6    6    254    42    170    212    254    42    86    128     (43, 43, 6)
+      4    3    6    6    254    42    170    212    254    42    128    170     (43, 43, 6)
+      4    4    6    6    254    42    170    212    254    42    170    212     (43, 43, 6)
+      4    5    6    6    254    42    170    212    254    42    212    254     (43, 43, 6)
+      5    0    6    6    254    42    212    254    254    43    0    43     (43, 43, 6)
+      5    1    6    6    254    42    212    254    254    43    43    86     (43, 43, 6)
+      5    2    6    6    254    42    212    254    254    42    86    128     (43, 43, 6)
+      5    3    6    6    254    42    212    254    254    42    128    170     (43, 43, 6)
+      5    4    6    6    254    42    212    254    254    42    170    212     (43, 43, 6)
+      5    5    6    6    254    42    212    254    254    42    212    254     (43, 43, 6)
+      -1    -1    6    6    254    0    0    0    254    0    0    0     (0, 0, 6)
+      -1    -1    6    6    254    0    0    0    254    0    0    0     (0, 0, 6)
+      -1    -1    6    6    254    0    0    0    254    0    0    0     (0, 0, 6)
+      -1    -1    6    6    254    0    0    0    254    0    0    0     (0, 0, 6)
+    Index map:
+    [[[  0  43  43   0  43  43]
+      [  0  43  43  43  43  86]
+      [  0  43  43  86  42 128]
+      [  0  43  43 128  42 170]
+      [  0  43  43 170  42 212]
+      [  0  43  43 212  42 254]]
+    
+     [[ 43  43  86   0  43  43]
+      [ 43  43  86  43  43  86]
+      [ 43  43  86  86  42 128]
+      [ 43  43  86 128  42 170]
+      [ 43  43  86 170  42 212]
+      [ 43  43  86 212  42 254]]
+    
+     [[ 86  42 128   0  43  43]
+      [ 86  42 128  43  43  86]
+      [ 86  42 128  86  42 128]
+      [ 86  42 128 128  42 170]
+      [ 86  42 128 170  42 212]
+      [ 86  42 128 212  42 254]]
+    
+     [[128  42 170   0  43  43]
+      [128  42 170  43  43  86]
+      [128  42 170  86  42 128]
+      [128  42 170 128  42 170]
+      [128  42 170 170  42 212]
+      [128  42 170 212  42 254]]
+    
+     [[170  42 212   0  43  43]
+      [170  42 212  43  43  86]
+      [170  42 212  86  42 128]
+      [170  42 212 128  42 170]
+      [170  42 212 170  42 212]
+      [170  42 212 212  42 254]]
+    
+     [[212  42 254   0  43  43]
+      [212  42 254  43  43  86]
+      [212  42 254  86  42 128]
+      [212  42 254 128  42 170]
+      [212  42 254 170  42 212]
+      [212  42 254 212  42 254]]]
+  
+  Memory usage (on process 0):
+    iorb_psir_map 0.00 MB
+    iorb_rhog_map 0.00 MB
+    I          0.08 MB
+  
+  Total memory usage (on process 0): 484.91 MB
+  Total memory usage (all processes): 19256.29 MB
+  
+  GPAWWavefunctionLoader: loading orbitals into memory... (memory mode: "critical")
+  
+   (process 0) 26 orbitals (10%) loaded in 3.118469s...
+   (process 0) 52 orbitals (20%) loaded in 2.931630s...
+   (process 0) 78 orbitals (30%) loaded in 2.956218s...
+   (process 0) 104 orbitals (40%) loaded in 2.927590s...
+   (process 0) 130 orbitals (51%) loaded in 10.485177s...
+   (process 0) 156 orbitals (61%) loaded in 2.932278s...
+   (process 0) 182 orbitals (71%) loaded in 2.958726s...
+   (process 0) 208 orbitals (81%) loaded in 2.943640s...
+   (process 0) 234 orbitals (92%) loaded in 2.946025s...
+  GPAWWavefunctionLoader: root -> first column scattering
+  GPAWWavefunctionLoader: first column -> other column bcast
+  GPAWWavefunctionLoader: root -> first row scattering
+  GPAWWavefunctionLoader: first row -> other row bcast
+  
+  Memory usage (on process 0):
+    iorb_psir_map 0.00 MB
+    iorb_rhog_map 0.00 MB
+    I          0.08 MB
+  
+  Total memory usage (on process 0): 661.17 MB
+  Total memory usage (all processes): 21531.25 MB
+  Time elapsed for loading wfc: 44s
+  
+  Computing dipole-dipole interaction tensor in G space...
+  
+  
+  Memory usage (on process 0):
+    iorb_psir_map 0.00 MB
+    iorb_rhog_map 0.00 MB
+    ddig       2.14 MB
+    I          0.08 MB
+  
+  Total memory usage (on process 0): 661.18 MB
+  Total memory usage (all processes): 21532.57 MB
+  
+  Iterating over pairs...
+  
+   (process 0) 10 pairs (1%) computed in 0.078308s...
+   (process 0) 20 pairs (2%) computed in 0.089369s...
+   (process 0) 30 pairs (3%) computed in 0.089441s...
+   (process 0) 40 pairs (4%) computed in 0.089627s...
+   (process 0) 50 pairs (5%) computed in 0.079928s...
+   (process 0) 60 pairs (6%) computed in 0.088404s...
+   (process 0) 70 pairs (7%) computed in 0.089803s...
+   (process 0) 80 pairs (8%) computed in 0.089566s...
+   (process 0) 90 pairs (9%) computed in 0.079288s...
+   (process 0) 100 pairs (10%) computed in 0.089562s...
+   (process 0) 110 pairs (11%) computed in 0.089235s...
+   (process 0) 120 pairs (12%) computed in 0.090148s...
+   (process 0) 130 pairs (13%) computed in 0.081061s...
+   (process 0) 140 pairs (14%) computed in 0.089224s...
+   (process 0) 150 pairs (15%) computed in 0.088981s...
+   (process 0) 160 pairs (16%) computed in 0.089092s...
+   (process 0) 170 pairs (17%) computed in 0.079447s...
+   (process 0) 180 pairs (19%) computed in 0.088880s...
+   (process 0) 190 pairs (20%) computed in 0.088954s...
+   (process 0) 200 pairs (21%) computed in 0.088578s...
+   (process 0) 210 pairs (22%) computed in 0.079808s...
+   (process 0) 220 pairs (23%) computed in 0.089358s...
+   (process 0) 230 pairs (24%) computed in 0.089358s...
+   (process 0) 240 pairs (25%) computed in 0.089310s...
+   (process 0) 250 pairs (26%) computed in 0.079554s...
+   (process 0) 260 pairs (27%) computed in 0.088972s...
+   (process 0) 270 pairs (28%) computed in 0.089067s...
+   (process 0) 280 pairs (29%) computed in 0.088773s...
+   (process 0) 290 pairs (30%) computed in 0.080758s...
+   (process 0) 300 pairs (31%) computed in 0.088878s...
+   (process 0) 310 pairs (32%) computed in 0.090752s...
+   (process 0) 320 pairs (33%) computed in 0.079747s...
+   (process 0) 330 pairs (34%) computed in 0.088037s...
+   (process 0) 340 pairs (35%) computed in 0.089178s...
+   (process 0) 350 pairs (36%) computed in 0.090963s...
+   (process 0) 360 pairs (38%) computed in 0.082280s...
+   (process 0) 370 pairs (39%) computed in 0.089423s...
+   (process 0) 380 pairs (40%) computed in 0.090028s...
+   (process 0) 390 pairs (41%) computed in 0.082015s...
+   (process 0) 400 pairs (42%) computed in 0.088926s...
+   (process 0) 410 pairs (43%) computed in 0.090813s...
+   (process 0) 420 pairs (44%) computed in 0.080729s...
+   (process 0) 430 pairs (45%) computed in 0.090814s...
+   (process 0) 440 pairs (46%) computed in 0.091584s...
+   (process 0) 450 pairs (47%) computed in 0.090569s...
+   (process 0) 460 pairs (48%) computed in 0.080343s...
+   (process 0) 470 pairs (49%) computed in 0.088209s...
+   (process 0) 480 pairs (50%) computed in 0.088537s...
+   (process 0) 490 pairs (51%) computed in 0.081560s...
+   (process 0) 500 pairs (52%) computed in 0.090217s...
+   (process 0) 510 pairs (53%) computed in 0.089823s...
+   (process 0) 520 pairs (54%) computed in 0.079688s...
+   (process 0) 530 pairs (56%) computed in 0.089111s...
+   (process 0) 540 pairs (57%) computed in 0.088997s...
+   (process 0) 550 pairs (58%) computed in 0.081477s...
+   (process 0) 560 pairs (59%) computed in 0.089696s...
+   (process 0) 570 pairs (60%) computed in 0.079749s...
+   (process 0) 580 pairs (61%) computed in 0.089291s...
+   (process 0) 590 pairs (62%) computed in 0.088255s...
+   (process 0) 600 pairs (63%) computed in 0.080970s...
+   (process 0) 610 pairs (64%) computed in 0.090246s...
+   (process 0) 620 pairs (65%) computed in 0.088051s...
+   (process 0) 630 pairs (66%) computed in 0.079218s...
+   (process 0) 640 pairs (67%) computed in 0.088503s...
+   (process 0) 650 pairs (68%) computed in 0.081933s...
+   (process 0) 660 pairs (69%) computed in 0.088262s...
+   (process 0) 670 pairs (70%) computed in 0.089539s...
+   (process 0) 680 pairs (71%) computed in 0.080270s...
+   (process 0) 690 pairs (72%) computed in 0.090361s...
+   (process 0) 700 pairs (73%) computed in 0.081805s...
+   (process 0) 710 pairs (75%) computed in 0.090588s...
+   (process 0) 720 pairs (76%) computed in 0.079858s...
+   (process 0) 730 pairs (77%) computed in 0.089189s...
+   (process 0) 740 pairs (78%) computed in 0.081020s...
+   (process 0) 750 pairs (79%) computed in 0.089468s...
+   (process 0) 760 pairs (80%) computed in 0.080029s...
+   (process 0) 770 pairs (81%) computed in 0.090244s...
+   (process 0) 780 pairs (82%) computed in 0.081179s...
+   (process 0) 790 pairs (83%) computed in 0.089610s...
+   (process 0) 800 pairs (84%) computed in 0.079189s...
+   (process 0) 810 pairs (85%) computed in 0.089420s...
+   (process 0) 820 pairs (86%) computed in 0.082117s...
+   (process 0) 830 pairs (87%) computed in 0.080451s...
+   (process 0) 840 pairs (88%) computed in 0.088490s...
+   (process 0) 850 pairs (89%) computed in 0.080466s...
+   (process 0) 860 pairs (90%) computed in 0.079109s...
+   (process 0) 870 pairs (91%) computed in 0.080419s...
+   (process 0) 880 pairs (93%) computed in 0.085082s...
+   (process 0) 890 pairs (94%) computed in 0.077095s...
+   (process 0) 900 pairs (95%) computed in 0.077144s...
+   (process 0) 910 pairs (96%) computed in 0.076674s...
+   (process 0) 920 pairs (97%) computed in 0.069375s...
+   (process 0) 930 pairs (98%) computed in 0.075181s...
+   (process 0) 940 pairs (99%) computed in 0.060584s...
+  
+  
+  Total D tensor (MHz): 
+  [[-7.04105219e-10  1.26872841e+03  1.26872841e+03]
+   [ 1.26872841e+03  4.97030328e-09  1.26872841e+03]
+   [ 1.26872841e+03  1.26872841e+03 -4.24006430e-09]]
+  D eigenvalues (MHz): 
+  [ 2537.45681315 -1268.72840657 -1268.72840658]
+  D eigenvectors: 
+  [-0.57735027 -0.57735027 -0.57735027]
+  [-0.77432556  0.61147271  0.16285284]
+  [-0.25900079 -0.54108811  0.8000889 ]
+  Dx, Dy, Dz (|Dz| > |Dx| > |Dy|) (MHz): 
+   -1268.728406577974 -1268.728406570427 2537.456813148427
+  Scalar D = 3806.19 MHz, E = -0.00 MHz
+  Time elapsed for pair iteration: 9s
