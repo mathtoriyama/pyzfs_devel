@@ -16,6 +16,7 @@ pyzfs_help_message = """Run Zero Field Splitting calculation
 Example:
     mpirun pyzfs --wfcfmt qeh5 --prefix pwscf
     mpirun pyzfs --wfcfmt qbox --filename gs.xml
+    mpirun pyzfs --wfcfmt gpaw --gpwfile calc.gpw --ae True --ae_reduce 4
 
 Acceptable kwargs are:
     --path: working directory for this calculation. Python will first change
@@ -26,18 +27,25 @@ Acceptable kwargs are:
         "qe": Quantum ESPRESSO (v6.1) save file. path should be the save folder that contains "data-files.xml", etc.
               The gvector and evc files have to be converted to xml through iotk.
         "qbox": Qbox xml file.
+        "gpaw": GPAW calculator (assumed to be finished).
         "cube-wfc": cube files of (real) wavefunctions (Kohn-Sham orbitals).
         "cube-density": cube files of (signed) wavefunction squared, mainly used to
             support pp.x output with plot_num = 7 and lsign = .TRUE.
         File name convention for cube files:
             1. Must end with ".cube".
-            2. Must contains either "up" or "down" to indicate spin channel.
+            2. Must contain either "up" or "down" to indicate spin channel.
             3. The last integer value found the file name is interpreted as band index.
         Default is "qeh5".
 
     --prefix: QE prefix. Only used for QE (HDF5) wavefunction.
 
     --filename: name for input wavefunction. Only used for Qbox wavefunction.
+
+    --gpwfile: Name of the GPAW calculator. Only used for GPAW wavefunction.
+
+    --ae: Boolean, whether all-electron (AE) reconstruction is performed. Default is False.
+
+    --ae_reduce: Scale to reduce AE real-space grid. Default is 4.
 
     --fftgrid: "density" or "wave", currently only works for QE wavefunction. If "wave"
         is specified, orbitals will use a reduced grid for FFT. Default is "wave".
@@ -124,6 +132,17 @@ def main():
         wfcloader = QEHDF5WavefunctionLoader(
             fftgrid=fftgrid, prefix=prefix, memory=memory
         )
+
+    elif wfcfmt == "gpaw":
+        from .common.wfc.gpawloader import GPAWWavefunctionLoader
+
+        gpwfile = kwargs.pop("gpwfile")
+        ae = bool(kwargs.pop("ae"))
+        ae_reduce = int(kwargs.pop("ae_reduce"))
+        wfcloader = GPAWWavefunctionLoader(
+            gpwfile=gpwfile, ae=ae, ae_reduce=ae_reduce
+        )
+
     else:
         raise ValueError("Unsupported wfcfmt: {}".format(wfcfmt))
 

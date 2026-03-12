@@ -35,7 +35,7 @@ def _compute_offset(sdm, iorb):
 
 class GPAWWavefunctionLoader(WavefunctionLoader):
 
-    def __init__(self, gpwfile, ae=False, ae_reduce=2, omm=MPI.COMM_WORLD):
+    def __init__(self, gpwfile, ae=False, ae_reduce=4, comm=MPI.COMM_WORLD):
         self.gpwfile = gpwfile
         self.ae = ae
         self.ae_reduce = ae_reduce
