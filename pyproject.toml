@@ -9,6 +9,7 @@ authors = [
     {name = "Marco Govoni", email = "mgovoni@unimore.it"},
     {name = "He Ma", email = "mahe@uchicago.edu"},
     {name = "Victor Yu", email = "yuw@anl.gov"},
+    {name = "Michael Toriyama", email = "mtoriyama@anl.gov"},
 ]
 description = "Python code to compute zero-field splitting tensors"
 readme = "README.md"
@@ -23,7 +24,7 @@ dependencies = [
     "lxml",
     "psutil",
 ]
-version = "2.3"
+version = "2.4"
 
 [project.scripts]
 pyzfs = "pyzfs.run:main"

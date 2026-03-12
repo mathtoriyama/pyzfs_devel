@@ -21,8 +21,8 @@ sys.path.insert(0, os.path.abspath("../"))
 
 project = "pyzfs"
 copyright = f"{datetime.now().year}, University of Chicago"
-author = "Giulia Galli, Marco Govoni, He Ma, Victor Yu"
-version = "2.3"
+author = "Giulia Galli, Marco Govoni, He Ma, Victor Yu, Michael Toriyama"
+version = "2.4"
 
 
 # -- General configuration ---------------------------------------------------
